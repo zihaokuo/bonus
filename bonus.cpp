@@ -10,6 +10,10 @@ int alltime;
 int totalscore=0;
 int totalcost=0;
 int space;
+int space2;
+int endtime;
+int endtime2;
+int firstscore;
 
 float dis[100][100]={0};
 float score[100]={0};
@@ -45,8 +49,10 @@ int main(int argc, char **argv)
 	string studentID = argv[1];
 	string tp = "/tp.data";
 	string final = "/ans1.txt";
+	string final2 = "/ans2.txt";	
 	string filenameinput =filename+studentID+tp;
 	string filenameoutput =filename+studentID+final;
+	string filenameoutput2 =filename+studentID+final2;	
 	ifstream fileinput;
 	ofstream fileoutput;
 	fileinput.open(filenameinput.c_str());
@@ -58,7 +64,8 @@ int main(int argc, char **argv)
 	fileinput>>allcity>>alledge>>alltime>>nowtime[0];
 	for(int i =0;i<allcity;i++)
 	{
-		fileinput>>name[i]>>score[i]>>space>>space;
+		fileinput>>name[i]>>score[i]>>space>>space2;
+		if(i==0){endtime=space;endtime2=space2;firstscore=score[0];}
 	}
 	for(int j =0;j<alledge;j++)
 	{
@@ -172,5 +179,11 @@ int main(int argc, char **argv)
 		fileoutput<<name[road[0]]<<" "<<nowtime[nowt]+(totalcost/2)<<" "<<nowtime[nowt]+(totalcost/2)<<endl;
 	}
 	fileoutput.close();
+	fileoutput.open(filenameoutput2.c_str());
+	if(nowtime[0]<=endtime2&&nowtime[0]>=endtime)
+		fileoutput<<firstscore<<" "<<"0"<<endl;
+	else
+		fileoutput<<"0"<<" "<<"0"<<endl;
+	fileoutput<<name[road[0]]<<" "<<nowtime[0]<<" "<<nowtime[0]<<endl;		
 }
  
