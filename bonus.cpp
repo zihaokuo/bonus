@@ -11,9 +11,9 @@ int totalscore=0;
 int totalcost=0;
 int space;
 
-float dis[50][50]={0};
-float score[50]={0};
-char name[50][50];
+float dis[100][100]={0};
+float score[100]={0};
+char name[100][100];
 int nowtime[1000]={0};
 int road[1000];
 /*class edge
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 	totalscore=score[0];
 	score[0]=0;
 	fileinput.close();
-	fileoutput.open(filenameoutput.c_str());			
+	fileoutput.open(filenameoutput.c_str());	
 	while(f==1&&t==1)
 	{
 		float want[50]={0};
@@ -97,9 +97,9 @@ int main(int argc, char **argv)
 				want[i]=score[i]/dis[nowcity][i];
 			}
 		}
+		f=0;
 		for(int i=0;i<allcity;i++)
 		{
-			f=0;
 			if(want[i]!=0)f=1;
 			if(want[i]>=compare&&want[i]!=0)
 			{
@@ -126,28 +126,30 @@ int main(int argc, char **argv)
 				score[go]=0;
 				nowcity=go;
 			}
-		}	
+		}
 	}
 
-	int x=road[nowt];
-	if(dis[nowcity][0]>time){totalcost+=dis[x][0];}
+	int x=road[nowt];int y=-1;
+	if(dis[nowcity][0]>time){totalcost+=dis[x][0];y=0;}
 	else
 	{
-		if(dis[nowcity][0]==0&&alltime>time*2){totalcost=totalcost*2;}
+		if(dis[nowcity][0]==0&&alltime>time*2){totalcost=totalcost*2;y=1;}
 		else
 		{
-			if(dis[x][0]!=0&&nowcity!=0)
+			//fileoutput<<totalcost<<endl; 
+			if(dis[x][0]!=0)
 			{
 				
 				if(totalcost>dis[x][0])
 				{
-					totalcost+=dis[x][0];
+					totalcost+=dis[x][0];y=0;
 				}
 				else
 				{
-					totalcost=totalcost*2;
+					totalcost=totalcost*2;y=1;
 				}
 			}
+			if(dis[x][0]==0){totalcost=totalcost*2;}
 		}
 	}
 	fileoutput<<totalscore<<" "<<totalcost<<endl;	
@@ -155,14 +157,20 @@ int main(int argc, char **argv)
 	{
 		fileoutput<<name[road[i]]<<" "<<nowtime[i]<<" "<<nowtime[i]<<endl;
 	}
-	if(dis[nowcity][0]>time)
+	if(y=0)
 	{
 		fileoutput<<name[road[0]]<<" "<<nowtime[nowt]+dis[x][0]<<" "<<nowtime[nowt]+dis[x][0]<<endl;
 	}
 	else//if(dis[nowcity][0]==0&&alltime>time*2)
 	{
+		int endtime=nowtime[nowt];
+		for(int i=nowt-1;i>0;i--)
+		{
+			endtime=endtime+dis[road[i]][road[i+1]];
+			fileoutput<<name[road[i]]<<" "<<endtime<<" "<<endtime<<endl;
+		}		
 		fileoutput<<name[road[0]]<<" "<<nowtime[nowt]+(totalcost/2)<<" "<<nowtime[nowt]+(totalcost/2)<<endl;
 	}
-	fileoutput.close();		
+	fileoutput.close();
 }
  
